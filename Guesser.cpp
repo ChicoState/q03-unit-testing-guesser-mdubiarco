@@ -15,7 +15,16 @@ using std::string;
   has 100, the distance is 10.
 */
 unsigned int Guesser::distance(string guess){
-  return 0;
+        unsigned int count = 0;
+        for(int i = 0; i < m_secret.length();i++)
+        {
+                if(m_secret[i] != guess[i])
+                {
+                        count++;
+                }
+        }
+
+  return count;
 }
 
 /*
@@ -25,13 +34,19 @@ unsigned int Guesser::distance(string guess){
   otherwise, it will be truncated at that length.
 */
 Guesser::Guesser(string secret){
+        int length = secret.length();
+        for(int i = 0; i < length && i < 32; i++)
+        {
+                m_secret = m_secret + secret[i];
+        }
+        m_remaining = 3;
 
 }
 
 /*
   Determines and returns whether the provided guess matches the secret
   phrase. However, the function also returns false if the secret is locked,
-  which happens if either (or both): 
+  which happens if either (or both):
     (A) there are no remaining guesses allowed
     (B) the function detects brute force, as indicated by a guess that has a
         distance greater than 2 from the secret
@@ -40,7 +55,19 @@ Guesser::Guesser(string secret){
   and the secret.
 */
 bool Guesser::match(string guess){
-  return true;
+        if(m_remaining == 0 || distance(guess) > 2)
+        {
+                return false;
+        }
+        if(m_secret == guess)
+        {
+                m_remaining = 3;
+                return true;
+        }
+
+        m_remaining--;
+
+  return false;
 }
 
 /*
@@ -51,6 +78,5 @@ bool Guesser::match(string guess){
   reset to three (3).
 */
 unsigned int Guesser::remaining(){
-  return 0;
+  return m_remaining;
 }
-
